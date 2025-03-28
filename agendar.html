@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendar Cita - Consultas Médicas</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="https://via.placeholder.com/150x80?text=Logo+Clinica" alt="Logo Clínica">
+            </div>
+            <nav class="user-nav">
+                <span class="user-name">Bienvenido, Dr. Juan Pérez</span>
+                <button class="btn-logout">Cerrar Sesión</button>
+            </nav>
+        </div>
+    </header>
+
+    <aside class="sidebar">
+        <nav class="main-nav">
+            <ul>
+                <li><a href="dashboard.html">Inicio</a></li>
+                <li><a href="historial.html">Historial de Citas</a></li>
+                <li class="active"><a href="agendar.html">Agendar Cita</a></li>
+                <li><a href="#">Mi Perfil</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <h1>Agendar Nueva Cita</h1>
+        
+        <form id="agendarForm" class="form-agendar">
+            <div class="form-group">
+                <label for="especialidad">Especialidad Médica</label>
+                <select id="especialidad" required>
+                    <option value="">Seleccione una especialidad</option>
+                    <option value="cardiologia">Cardiología</option>
+                    <option value="pediatria">Pediatría</option>
+                    <option value="dermatologia">Dermatología</option>
+                    <option value="ginecologia">Ginecología</option>
+                    <option value="neurologia">Neurología</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="doctor">Doctor</label>
+                <select id="doctor" required disabled>
+                    <option value="">Primero seleccione una especialidad</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="fecha">Fecha</label>
+                <input type="date" id="fecha" required min="">
+            </div>
+            
+            <div class="form-group">
+                <label for="hora">Hora</label>
+                <select id="hora" required disabled>
+                    <option value="">Primero seleccione una fecha</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="motivo">Motivo de la consulta</label>
+                <textarea id="motivo" rows="4" required></textarea>
+            </div>
+            
+            <div class="form-group form-check">
+                <input type="checkbox" id="recordatorio" checked>
+                <label for="recordatorio">Recibir recordatorio por correo</label>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">Agendar Cita</button>
+                <button type="button" class="btn-secondary">Cancelar</button>
+            </div>
+        </form>
+    </main>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
