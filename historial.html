@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial - Consultas Médicas</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="https://via.placeholder.com/150x80?text=Logo+Clinica" alt="Logo Clínica">
+            </div>
+            <nav class="user-nav">
+                <span class="user-name">Bienvenido, Dr. Juan Pérez</span>
+                <button class="btn-logout">Cerrar Sesión</button>
+            </nav>
+        </div>
+    </header>
+
+    <aside class="sidebar">
+        <nav class="main-nav">
+            <ul>
+                <li><a href="dashboard.html">Inicio</a></li>
+                <li class="active"><a href="historial.html">Historial de Citas</a></li>
+                <li><a href="agendar.html">Agendar Cita</a></li>
+                <li><a href="#">Mi Perfil</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <h1>Historial de Citas</h1>
+        
+        <div class="filtros">
+            <div class="form-group">
+                <label for="filtro-especialidad">Filtrar por especialidad</label>
+                <select id="filtro-especialidad">
+                    <option value="">Todas las especialidades</option>
+                    <option value="cardiologia">Cardiología</option>
+                    <option value="pediatria">Pediatría</option>
+                    <option value="dermatologia">Dermatología</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="filtro-fecha">Filtrar por fecha</label>
+                <input type="month" id="filtro-fecha">
+            </div>
+            
+            <button class="btn-secondary">Aplicar Filtros</button>
+        </div>
+        
+        <div class="citas-container">
+            <!-- Tarjeta de Cita Pasada 1 -->
+            <div class="cita-card">
+                <div class="cita-header">
+                    <h3>Consulta de Cardiología</h3>
+                    <span class="cita-status completada">Completada</span>
+                </div>
+                <div class="cita-body">
+                    <p><strong>Fecha:</strong> 10 Mayo 2023</p>
+                    <p><strong>Hora:</strong> 11:00 AM</p>
+                    <p><strong>Doctor:</strong> Dr. Carlos Martínez</p>
+                    <p><strong>Diagnóstico:</strong> Control rutinario, todo normal</p>
+                </div>
+                <div class="cita-actions">
+                    <button class="btn-secondary">Ver Detalles</button>
+                </div>
+            </div>
+            
+            <!-- Tarjeta de Cita Pasada 2 -->
+            <div class="cita-card">
+                <div class="cita-header">
+                    <h3>Consulta de Dermatología</h3>
+                    <span class="cita-status completada">Completada</span>
+                </div>
+                <div class="cita-body">
+                    <p><strong>Fecha:</strong> 22 Abril 2023</p>
+                    <p><strong>Hora:</strong> 3:30 PM</p>
+                    <p><strong>Doctor:</strong> Dra. Laura Gómez</p>
+                    <p><strong>Diagnóstico:</strong> Dermatitis atópica, tratamiento recetado</p>
+                </div>
+                <div class="cita-actions">
+                    <button class="btn-secondary">Ver Detalles</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
