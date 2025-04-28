@@ -1,27 +1,40 @@
-// Funcionalidad común para todas las páginas
 document.addEventListener('DOMContentLoaded', function() {
-    // Simular login
     const loginForm = document.getElementById('loginForm');
+    const forgotPasswordLink = document.getElementById('forgotPassword');
+
+    // Login con Firebase
     if (loginForm) {
-        loginForm.addEventListener('submit', function(e) {
+        loginForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            
-            // Validación simple (en un proyecto real harías una petición al servidor)
-            if (email && password) {
-                window.location.href = 'dashboard.html';
-            } else {
-                alert('Por favor ingresa tus credenciales');
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                console.log("Usuario logeado:", user.email);
+                window.location.href = 'dashboard.html'; // Redirige al dashboard
+            } catch (error) {
+                console.error("Error al iniciar sesión:", error.message);
+                alert(`Error: ${error.message}`);
             }
         });
     }
-    
-    // Logout
-    const logoutBtn = document.querySelector('.btn-logout');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', function() {
-            window.location.href = 'index.html';
+
+    // Recuperar contraseña
+    if (forgotPasswordLink) {
+        forgotPasswordLink.addEventListener('click', async function(e) {
+            e.preventDefault();
+            const email = prompt("Ingresa tu correo para recuperar contraseña:");
+            if (email) {
+                try {
+                    await sendPasswordResetEmail(auth, email);
+                    alert("¡Correo de recuperación enviado! Revisa tu bandeja de entrada.");
+                } catch (error) {
+                    console.error("Error al enviar correo:", error.message);
+                    alert(`Error: ${error.message}`);
+                }
+            }
         });
     }
 });
