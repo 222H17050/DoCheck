@@ -33,30 +33,6 @@
         </form>
     </div>
 
-    <!-- Firebase SDK (versión modular v11) -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCyolxxonmLbCUUB9DgOR-1rD3HYoS8U00",
-            authDomain: "docheck-bd7c2.firebaseapp.com",
-            projectId: "docheck-bd7c2",
-            storageBucket: "docheck-bd7c2.firebasestorage.app",
-            messagingSenderId: "322997418614",
-            appId: "1:322997418614:web:de45ad692a995e5be23d57",
-            measurementId: "G-1ZXSX28TQZ"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
-        // Exporta auth para usarlo en script.js
-        window.auth = auth;
-        window.signInWithEmailAndPassword = signInWithEmailAndPassword;
-        window.sendPasswordResetEmail = sendPasswordResetEmail;
-    </script>
-
-    <script src="js/script.js"></script>
+    <script type="module" src="js/script.js"></script>
 </body>
 </html>

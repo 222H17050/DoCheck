@@ -33,43 +33,78 @@
     <main class="main-content">
         <h1>Próximas Citas</h1>
         
-        <div class="citas-container">
-            <!-- Tarjeta de Cita 1 -->
-            <div class="cita-card">
-                <div class="cita-header">
-                    <h3>Consulta de Cardiología</h3>
-                    <span class="cita-status proxima">Próxima</span>
-                </div>
-                <div class="cita-body">
-                    <p><strong>Fecha:</strong> 15 Junio 2023</p>
-                    <p><strong>Hora:</strong> 10:30 AM</p>
-                    <p><strong>Doctor:</strong> Dr. Carlos Martínez</p>
-                    <p><strong>Ubicación:</strong> Consultorio 304</p>
-                </div>
-                <div class="cita-actions">
-                    <button class="btn-secondary">Ver Detalles</button>
-                </div>
-            </div>
-            
-            <!-- Tarjeta de Cita 2 -->
-            <div class="cita-card">
-                <div class="cita-header">
-                    <h3>Control de Rutina</h3>
-                    <span class="cita-status proxima">Próxima</span>
-                </div>
-                <div class="cita-body">
-                    <p><strong>Fecha:</strong> 20 Junio 2023</p>
-                    <p><strong>Hora:</strong> 4:00 PM</p>
-                    <p><strong>Doctor:</strong> Dra. Ana López</p>
-                    <p><strong>Ubicación:</strong> Consultorio 210</p>
-                </div>
-                <div class="cita-actions">
-                    <button class="btn-secondary">Ver Detalles</button>
-                </div>
-            </div>
+        <div class="citas-container" id="citasContainer">
+            <!-- Las citas se cargarán aquí dinámicamente -->
         </div>
     </main>
-
-    <script src="js/script.js"></script>
+    
+    <!-- Agrega estos scripts al final del body -->
+    <script type="module">
+        import { auth, onAuthStateChanged, signOut } from './src/firebase.js';
+        import { ConsultaService } from './src/consulta.js';
+      
+        // Renderizado mejorado
+        const renderCitas = (citas) => {
+          const container = document.getElementById('citasContainer');
+          
+          if (!citas || citas.length === 0) {
+            container.innerHTML = `
+              <div class="no-citas">
+                <p>No tienes citas programadas</p>
+              </div>
+            `;
+            return;
+          }
+      
+          container.innerHTML = citas.map(cita => `
+            <div class="cita-card" data-id="${cita.id}">
+              <div class="cita-header">
+                <h3>${cita.especialidad}</h3>
+                <span class="cita-status proxima">Próxima</span>
+              </div>
+              <div class="cita-body">
+                <p><strong>Fecha:</strong> ${cita.fecha.toDate().toLocaleDateString('es-ES', { 
+                    weekday: 'long', 
+                    day: 'numeric', 
+                    month: 'long', 
+                    year: 'numeric' 
+                })}</p>
+                <p><strong>Hora:</strong> ${cita.hora || 'Por definir'}</p>
+                <p><strong>Doctor:</strong> ${cita.nombre_doctor}</p>
+                <p><strong>Ubicación:</strong> ${cita.ubicacion || 'Por asignar'}</p>
+                <p><strong>Motivo:</strong> ${cita.motivo}</p>
+              </div>
+            </div>
+          `).join('');
+        };
+      
+        // Carga inicial con manejo de errores
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                try {
+                console.log("Usuario UID:", user.uid); // Verifica que el UID sea correcto
+                const citas = await ConsultaService.listarPorUsuario(user.uid);
+                renderCitas(citas);
+                } catch (error) {
+                console.error("Error detallado:", error);
+                // Muestra el error al usuario
+                document.getElementById('citasContainer').innerHTML = `
+                    <div class="error">
+                    <p>Error al cargar citas: ${error.message}</p>
+                    </div>
+                `;
+                }
+            } else {
+                window.location.href = 'index.html';
+            }
+            });
+      
+        // Logout
+        document.querySelector('.btn-logout').addEventListener('click', () => {
+          signOut(auth).then(() => {
+            window.location.href = 'index.html';
+          });
+        });
+      </script>
 </body>
 </html>
