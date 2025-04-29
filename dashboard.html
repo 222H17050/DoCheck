@@ -40,71 +40,98 @@
     
     <!-- Agrega estos scripts al final del body -->
     <script type="module">
-        import { auth, onAuthStateChanged, signOut } from './src/firebase.js';
-        import { ConsultaService } from './src/consulta.js';
-      
-        // Renderizado mejorado
-        const renderCitas = (citas) => {
-          const container = document.getElementById('citasContainer');
-          
-          if (!citas || citas.length === 0) {
-            container.innerHTML = `
-              <div class="no-citas">
-                <p>No tienes citas programadas</p>
-              </div>
-            `;
-            return;
-          }
-      
-          container.innerHTML = citas.map(cita => `
-            <div class="cita-card" data-id="${cita.id}">
-              <div class="cita-header">
-                <h3>${cita.especialidad}</h3>
-                <span class="cita-status proxima">Próxima</span>
-              </div>
-              <div class="cita-body">
-                <p><strong>Fecha:</strong> ${cita.fecha.toDate().toLocaleDateString('es-ES', { 
-                    weekday: 'long', 
-                    day: 'numeric', 
-                    month: 'long', 
-                    year: 'numeric' 
-                })}</p>
-                <p><strong>Hora:</strong> ${cita.hora || 'Por definir'}</p>
-                <p><strong>Doctor:</strong> ${cita.nombre_doctor}</p>
-                <p><strong>Ubicación:</strong> ${cita.ubicacion || 'Por asignar'}</p>
-                <p><strong>Motivo:</strong> ${cita.motivo}</p>
-              </div>
+      import { auth, onAuthStateChanged, signOut } from './src/firebase.js';
+      import { ConsultaService } from './src/consulta.js';
+    
+      // Función para renderizar citas con botones de cancelar funcionales
+      const renderCitas = (citas) => {
+        const container = document.getElementById('citasContainer');
+        
+        if (!citas || citas.length === 0) {
+          container.innerHTML = `
+            <div class="no-citas">
+              <p>No tienes citas programadas</p>
             </div>
-          `).join('');
-        };
+          `;
+          return;
+        }
       
-        // Carga inicial con manejo de errores
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                try {
-                console.log("Usuario UID:", user.uid); // Verifica que el UID sea correcto
-                const citas = await ConsultaService.listarPorUsuario(user.uid);
-                renderCitas(citas);
-                } catch (error) {
-                console.error("Error detallado:", error);
-                // Muestra el error al usuario
-                document.getElementById('citasContainer').innerHTML = `
-                    <div class="error">
-                    <p>Error al cargar citas: ${error.message}</p>
+        container.innerHTML = citas.map(cita => `
+          <div class="cita-card" data-id="${cita.id}">
+            <div class="cita-header">
+              <h3>${cita.especialidad}</h3>
+              <a class="cita-status cancelar" href="#" data-id="${cita.id}">Cancelar</a>
+              <span class="cita-status proxima">Próxima</span>
+            </div>
+            <div class="cita-body">
+              <p><strong>Fecha:</strong> ${cita.fecha.toDate().toLocaleDateString('es-ES', { 
+                  weekday: 'long', 
+                  day: 'numeric', 
+                  month: 'long', 
+                  year: 'numeric' 
+              })}</p>
+              <p><strong>Hora:</strong> ${cita.hora || 'Por definir'}</p>
+              <p><strong>Doctor:</strong> ${cita.nombre_doctor}</p>
+              <p><strong>Ubicación:</strong> ${cita.ubicacion || 'Por asignar'}</p>
+              <p><strong>Motivo:</strong> ${cita.motivo}</p>
+            </div>
+          </div>
+        `).join('');
+        
+        // Agregar event listeners a los botones de cancelar
+        document.querySelectorAll('.cancelar').forEach(btn => {
+          btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const citaId = e.target.dataset.id;
+            
+            if (confirm('¿Estás seguro de que deseas cancelar esta cita?')) {
+              try {
+                await ConsultaService.cancelar(citaId);
+                e.target.closest('.cita-card').remove();
+                
+                // Mostrar mensaje si no quedan citas
+                if (document.querySelectorAll('.cita-card').length === 0) {
+                  container.innerHTML = `
+                    <div class="no-citas">
+                      <p>No tienes citas programadas</p>
                     </div>
-                `;
+                  `;
                 }
-            } else {
-                window.location.href = 'index.html';
+              } catch (error) {
+                console.error('Error al cancelar cita:', error);
+                alert('Error al cancelar la cita: ' + error.message);
+              }
             }
-            });
-      
-        // Logout
-        document.querySelector('.btn-logout').addEventListener('click', () => {
-          signOut(auth).then(() => {
-            window.location.href = 'index.html';
           });
         });
-      </script>
+      };
+    
+      // Carga inicial con manejo de errores
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          try {
+            document.querySelector('.user-name').textContent = `Bienvenido, ${user.email.split('@')[0] || 'Usuario'}`;
+            const citas = await ConsultaService.listarPorUsuario(user.uid);
+            renderCitas(citas);
+          } catch (error) {
+            console.error("Error cargando citas:", error);
+            document.getElementById('citasContainer').innerHTML = `
+              <div class="error">
+                <p>Error al cargar citas: ${error.message}</p>
+              </div>
+            `;
+          }
+        } else {
+          window.location.href = 'index.html';
+        }
+      });
+    
+      // Logout
+      document.querySelector('.btn-logout').addEventListener('click', () => {
+        signOut(auth).then(() => {
+          window.location.href = 'index.html';
+        });
+      });
+  </script>
 </body>
 </html>

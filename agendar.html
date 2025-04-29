@@ -52,6 +52,61 @@
                     <option value="">Primero seleccione una especialidad</option>
                 </select>
             </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Obtener elementos del DOM
+                    const especialidadSelect = document.getElementById('especialidad');
+                    const doctorSelect = document.getElementById('doctor');
+                    
+                    // Mapeo de especialidades a doctores (puedes expandir esto)
+                    const doctoresPorEspecialidad = {
+                        'cardiologia': [
+                            { value: 'dr1', nombre: 'Dr. Carlos Pérez' },
+                            { value: 'dr2', nombre: 'Dra. Ana López' }
+                        ],
+                        'pediatria': [
+                            { value: 'dr3', nombre: 'Dr. Juan Martínez' },
+                            { value: 'dr4', nombre: 'Dra. Laura García' }
+                        ],
+                        'dermatologia': [
+                            { value: 'dr5', nombre: 'Dr. Miguel Sánchez' }
+                        ],
+                        'ginecologia': [
+                            { value: 'dr6', nombre: 'Dra. Sofía Ramírez' },
+                            { value: 'dr7', nombre: 'Dra. Patricia Castro' }
+                        ],
+                        'neurologia': [
+                            { value: 'dr8', nombre: 'Dr. Roberto Jiménez' }
+                        ]
+                    };
+                
+                    // Event listener para el cambio de especialidad
+                    especialidadSelect.addEventListener('change', function() {
+                        // Limpiar select de doctores
+                        doctorSelect.innerHTML = '<option value="">Seleccione un doctor</option>';
+                        
+                        if(this.value !== '') {
+                            // Habilitar select de doctores
+                            doctorSelect.disabled = false;
+                            
+                            // Obtener doctores para la especialidad seleccionada
+                            const doctores = doctoresPorEspecialidad[this.value] || [];
+                            
+                            // Añadir opciones de doctores
+                            doctores.forEach(doctor => {
+                                const option = document.createElement('option');
+                                option.value = doctor.value;
+                                option.textContent = doctor.nombre;
+                                doctorSelect.appendChild(option);
+                            });
+                        } else {
+                            // Deshabilitar select de doctores si no hay especialidad seleccionada
+                            doctorSelect.disabled = true;
+                            doctorSelect.innerHTML = '<option value="">Primero seleccione una especialidad</option>';
+                        }
+                    });
+                });
+                </script>
             
             <div class="form-group">
                 <label for="fecha">Fecha</label>
@@ -64,7 +119,45 @@
                     <option value="">Primero seleccione una fecha</option>
                 </select>
             </div>
-            
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Obtener elementos del DOM
+                    const fechaInput = document.getElementById('fecha');
+                    const horaSelect = document.getElementById('hora');
+                    
+                    // Configurar fecha mínima como hoy (opcional)
+                    fechaInput.min = new Date().toISOString().split('T')[0];
+                    
+                    // Horarios de ejemplo (puedes personalizarlos)
+                    const horariosDisponibles = [
+                        '08:00', '09:00', '10:00', '11:00', 
+                        '14:00', '15:00', '16:00', '17:00'
+                    ];
+                
+                    // Event listener para el cambio de fecha
+                    fechaInput.addEventListener('change', function() {
+                        // Limpiar select de horas
+                        horaSelect.innerHTML = '<option value="">Seleccione una hora</option>';
+                        
+                        if(this.value) {
+                            // Habilitar select de horas
+                            horaSelect.disabled = false;
+                            
+                            // Añadir opciones de horarios disponibles
+                            horariosDisponibles.forEach(hora => {
+                                const option = document.createElement('option');
+                                option.value = hora;
+                                option.textContent = hora;
+                                horaSelect.appendChild(option);
+                            });
+                        } else {
+                            // Deshabilitar select de horas si no hay fecha seleccionada
+                            horaSelect.disabled = true;
+                            horaSelect.innerHTML = '<option value="">Primero seleccione una fecha</option>';
+                        }
+                    });
+                });
+                </script>
             <div class="form-group">
                 <label for="motivo">Motivo de la consulta</label>
                 <textarea id="motivo" rows="4" required></textarea>
@@ -81,7 +174,7 @@
             </div>
         </form>
     </main>
-
-    <script src="js/script.js"></script>
+    <!-- Al final del body, después de los otros scripts -->
+    <script type="module" src="src/agendar.js"></script>
 </body>
 </html>
