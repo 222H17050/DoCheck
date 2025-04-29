@@ -82,7 +82,25 @@ body {
     margin-top: 1rem;
 }
 
+
 .btn-primary:hover {
+    background-color: #1a68d1;
+}
+
+.btn-second {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.btn-second:hover {
     background-color: #1a68d1;
 }
 
