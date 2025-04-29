@@ -13,7 +13,7 @@
                 <img src="https://via.placeholder.com/150x80?text=Logo+Clinica" alt="Logo Clínica">
             </div>
             <nav class="user-nav">
-                <span class="user-name">Bienvenido, Dr. Juan Pérez</span>
+                <span class="user-name">Bienvenido</span>
                 <button class="btn-logout">Cerrar Sesión</button>
             </nav>
         </div>
@@ -175,6 +175,36 @@
         </form>
     </main>
     <!-- Al final del body, después de los otros scripts -->
+    <script type="module">
+        import { auth, onAuthStateChanged, signOut } from './src/firebase.js';
+        import { ConsultaService } from './src/consulta.js';
+        // Carga inicial con manejo de errores
+        onAuthStateChanged(auth, async (user) => {
+          if (user) {
+            try {
+              document.querySelector('.user-name').textContent = `Bienvenido, ${user.email.split('@')[0] || 'Usuario'}`;
+              const citas = await ConsultaService.listarPorUsuario(user.uid);
+              renderCitas(citas);
+            } catch (error) {
+              console.error("Error cargando citas:", error);
+              document.getElementById('citasContainer').innerHTML = `
+                <div class="error">
+                  <p>Error al cargar citas: ${error.message}</p>
+                </div>
+              `;
+            }
+          } else {
+            window.location.href = 'index.html';
+          }
+        });
+      
+        // Logout
+        document.querySelector('.btn-logout').addEventListener('click', () => {
+          signOut(auth).then(() => {
+            window.location.href = 'index.html';
+          });
+        });
+    </script>
     <script type="module" src="src/agendar.js"></script>
 </body>
 </html>
